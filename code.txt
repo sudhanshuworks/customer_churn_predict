@@ -1,0 +1,79 @@
+#All the Lib
+import pandas as pd
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+%matplotlib inline
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.feature_selection import RFE
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import minmax_scale
+import tensorflow as tf
+import pickle 
+from sklearn.preprocessing import minmax_scale
+import keras
+from keras.models import Sequential 
+from keras.layers import InputLayer 
+from keras.constraints import maxnorm
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from keras.models import Sequential
+from keras.layers import Dense, Activation, Dropout
+from sklearn.preprocessing import LabelEncoder
+from keras.optimizers import SGD
+from sklearn.preprocessing import StandardScaler
+
+
+
+#Customer Data
+data = pd.read_csv(r"C:\Users\himanshu.singh2\Documents\data\Demo\Credit  card\Churn_bank.csv")
+x=data
+lb_make = LabelEncoder()
+x["E_Geography"] = lb_make.fit_transform(x["Geography"])
+x["E_Gender"] = lb_make.fit_transform(x["Gender"])
+x1=x.drop(['Surname','Geography','Gender', 'CustomerId'], axis=1)
+x1 = pd.DataFrame(minmax_scale(x1),columns = x1.columns)
+x2=x1.drop(['Churn'], axis=1)
+y1=x1.drop(['CreditScore','Age','Tenure','Balance','NumOfProducts','HasCrCard','IsActiveMember','EstimatedSalary','E_Geography','E_Gender'], axis=1)
+
+#Train test Split
+X_train, X_test, y_train, y_test = train_test_split(x2, y1, test_size= 0.3, random_state= 42)
+
+#Model Building
+rclf = RandomForestClassifier()
+rclf.fit(X_train,y_train)
+
+#Accuracy Mesaure Model execution
+y_pred = rclf.predict(X_test)
+print(len(X_test))
+print(accuracy_score(y_test,y_pred))
+print(confusion_matrix(y_test,y_pred))
+print(classification_report(y_test,y_pred))
+y_pred = rclf.predict(X_test)
+
+  
+# Save the trained model as a pickle string. 
+Pkl_Filename = "RChurn_Pickle_Model.pkl"  
+
+with open(Pkl_Filename, 'wb') as file:  
+    pickle.dump(rclf, file)
+
+
+X_test['pred']=y_pred
+
+x_in=X_test.drop(['CreditScore','Tenure','Age','Balance','NumOfProducts','HasCrCard','IsActiveMember','EstimatedSalary','E_Geography','E_Gender'], axis=1)
+
+
+#Merging data and Intersection on data
+ori = pd.read_csv(r"C:\Users\himanshu.singh2\Documents\data\Demo\Credit  card\Churn_bank.csv")
+yb2=pd.merge(ori, x_in, left_index=True,right_index=True)
+
+
+
+#Saving data in a file
+yb2.to_csv(r"C:\Users\himanshu.singh2\Documents\data\Demo\Credit  card\churn19.csv")
+yb3=yb2.drop(['Surname','CreditScore','Geography','Age','Tenure','Gender','Balance','NumOfProducts','HasCrCard','IsActiveMember','EstimatedSalary'], axis=1)
+
