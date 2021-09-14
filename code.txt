@@ -12,18 +12,10 @@ from sklearn.feature_selection import RFE
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import minmax_scale
-import tensorflow as tf
+#import tensorflow as tf
 import pickle 
 from sklearn.preprocessing import minmax_scale
-import keras
-from keras.models import Sequential 
-from keras.layers import InputLayer 
-from keras.constraints import maxnorm
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-from keras.models import Sequential
-from keras.layers import Dense, Activation, Dropout
-from sklearn.preprocessing import LabelEncoder
-from keras.optimizers import SGD
+#import keras
 from sklearn.preprocessing import StandardScaler
 
 
